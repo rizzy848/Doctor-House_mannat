@@ -19,6 +19,17 @@ class _Vertex:
 
 
 class Graph:
+
+    """A graph.
+
+    Representation Invariants:
+    - all(item == self._vertices[item].item for item in self._vertices)
+    """
+    # Private Instance Attributes:
+    #     - _vertices: A collection of the vertices contained in this graph.
+    #                  Maps item to _Vertex instance.
+    _vertices: dict[Any, _Vertex]
+
     def add_vertex(self, item: Any) -> None:
         """Add a vertex with the given item to this graph.
 
