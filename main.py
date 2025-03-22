@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Any
 import csv
+from collections import deque
 
 class _Vertex:
     """A vertex in a graph.
