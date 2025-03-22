@@ -85,6 +85,34 @@ class Graph:
         else:
             raise ValueError
 
+        def shortest_path(self, start: Any, end: Any) -> list[Any]:
+        """Find the shortest path between two vertices using BFS.
+
+        Returns a list of items representing the shortest path from start to end.
+        If no path exists, returns an empty list.
+        """
+        if start not in self._vertices or end not in self._vertices:
+            return []
+
+        queue = deque([[start]])  # Queue stores paths, starting with the start vertex
+        visited = set()
+
+        while queue:
+            path = queue.popleft()
+            node = path[-1]
+
+            if node == end:
+                return path  # Found the shortest path
+
+            if node not in visited:
+                visited.add(node)
+                for neighbor in self.get_neighbours(node):
+                    new_path = list(path)  # Copy the current path
+                    new_path.append(neighbor)
+                    queue.append(new_path)
+
+        return []  # No path found
+
 
 with open('Symptom-severity.csv', mode ='r') as file:
   symptomfile = csv.reader(file)
