@@ -181,7 +181,13 @@ for disease in disease_to_symptom_map:
 print(diagnosis_graph.shortest_path("skin_rash","bruising"))
 
 
-def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list):
+def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list) -> dict[str, float]:
+    """
+    Return the likelihood of each disease based on the provided symptoms by analyzing the shortest paths
+    between symptom nodes in a diagnosis graph.
+    This function checks all pairs of symptoms, finds the shortest path between them, and adds up scores for
+    each disease along the path. It then calculates a percentage chance for each disease based on those scores.
+    """
     scores = {}
     for symptom_1, symptom_2 in combinations(symptoms, 2):
         path = diagnosis_graph.shortest_path(symptom_1, symptom_2)
