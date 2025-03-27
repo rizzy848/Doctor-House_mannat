@@ -121,28 +121,33 @@ class Graph:
 
         return []  # No path found
     
-    def get_vertex_kind(self, item):
+    def get_vertex_kind(self, item: Any) -> str:
+        """
+        Return the type of vertex (that is disease or symptom) with the given item
+        """
         return self._vertices[item].kind
     
-    def get_weight_of_edge(self, item_1: Any, item_2: Any):
+    def get_weight_of_edge(self, item_1: Any, item_2: Any) -> float:
         """
-        
+        Returns the weight of the edge between two vertices with given item_1 and item_2.
         Preconditions:
             - item_1 and item_2 are neighbours
         """
         for neighbour in self._vertices[item_1].neighbours:
             if neighbour[0].item == item_2:
                 return neighbour[1]
-                
-    
-    def calculate_path_score(self, path: list):
+
+    def calculate_path_score(self, path: list) -> float:
+        """
+        return the total weight of the given path.
+        """
         score = 0
         for i in range(len(path) - 1):
             score += self.get_weight_of_edge(path[i], path[i + 1])
         return score
 
 
-with open('Symptom-severity.csv', mode ='r') as file:
+with open('Symptom-severity.csv', mode='r') as file:
   symptomfile = csv.reader(file)
   next(symptomfile)
   severity_map = {line[0].strip() : line[1].strip() for line in symptomfile}
