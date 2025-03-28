@@ -235,18 +235,23 @@ def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list) -> dict[
     each disease along the path. It then calculates a percentage chance for each disease based on those scores.
     """
 
-    if len(symptoms) == 1:
-        return {diagnosis_graph.get_closest_neighbour(symptoms[0]): 100}
-
     scores = {}
-    for symptom_1, symptom_2 in combinations(symptoms, 2):
-        path = diagnosis_graph.shortest_path(symptom_1, symptom_2)
-        for vertex in path:
-            if diagnosis_graph.get_vertex_kind(vertex) == "disease":
-                if vertex not in scores:
-                    scores[vertex] = diagnosis_graph.calculate_path_score(path)
-                else:
-                    scores[vertex] += diagnosis_graph.calculate_path_score(path)
+    if len(symptoms) == 1:
+        neighbours = diagnosis_graph.get_neighbours(symptoms[0])
+        for neighbour in neighbours:
+            if neighbour not in scores:
+                scores[neighbour] = diagnosis_graph.get_weight_of_edge(neighbour, symptoms[0])
+            else:
+                scores[neighbour] += diagnosis_graph.get_weight_of_edge(neighbour, symptoms[0])
+    else:
+        for symptom_1, symptom_2 in combinations(symptoms, 2):
+            path = diagnosis_graph.shortest_path(symptom_1, symptom_2)
+            for vertex in path:
+                if diagnosis_graph.get_vertex_kind(vertex) == "disease":
+                    if vertex not in scores:
+                        scores[vertex] = diagnosis_graph.calculate_path_score(path)
+                    else:
+                        scores[vertex] += diagnosis_graph.calculate_path_score(path)
 
 
     scores = {disease: 1 / scores[disease] for disease in scores}
@@ -257,9 +262,10 @@ def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list) -> dict[
 
 
 
-# Some Tests TODO: Delete Later
+# Some Tests TODO: Delete
 print(calculate_potential_disease(diagnosis_graph, ["congestion", "knee_pain", "depression", "polyuria"]))
 print(calculate_potential_disease(diagnosis_graph, ["continuous_feel_of_urine", "abdominal_pain"]))
 print(calculate_potential_disease(diagnosis_graph, ["continuous_feel_of_urine"]))
+print(calculate_potential_disease(diagnosis_graph, ["abdominal_pain"]))
 print(name_to_disease_map["Peptic ulcer diseae"].advice)
 print(name_to_disease_map["Peptic ulcer diseae"].description)
