@@ -172,51 +172,49 @@ class Graph:
         """
         return [vertex for vertex in self._vertices]
 
+def load_diagnosis_graph(symptom_file: str, dataset_file: str, description_file: str, precaution_file: str) -> Graph:
+    with open(symptom_file, mode='r') as file:
+        symptomfile = csv.reader(file)
+        next(symptomfile)
+        severity_map = {line[0].strip() : line[1].strip() for line in symptomfile}
 
-with open('Symptom-severity.csv', mode='r') as file:
-  symptomfile = csv.reader(file)
-  next(symptomfile)
-  severity_map = {line[0].strip() : line[1].strip() for line in symptomfile}
+    with open(dataset_file, mode ='r') as file:
+        diseasefile = csv.reader(file)
+        next(diseasefile)
+        name_to_disease_map = {}
+        for line in diseasefile:
+            symptoms = {element.strip() for element in line[1:] if element != ""}
+            if line[0].strip() in name_to_disease_map:
+                name_to_disease_map[line[0].strip()].symptoms = name_to_disease_map[line[0].strip()].symptoms.union(symptoms)
+            else:
+                name_to_disease_map[line[0].strip()] = Disease(name = line[0].strip(), symptoms = symptoms)
 
-with open('dataset.csv', mode ='r') as file:
-  diseasefile = csv.reader(file)
-  next(diseasefile)
-  name_to_disease_map = {}
-  for line in diseasefile:
-    symptoms = {element.strip() for element in line[1:] if element != ""}
-    if line[0].strip() in name_to_disease_map:
-        name_to_disease_map[line[0].strip()].symptoms = name_to_disease_map[line[0].strip()].symptoms.union(symptoms)
-    else:
-       name_to_disease_map[line[0].strip()] = Disease(name = line[0].strip(), symptoms = symptoms)
+    with open(description_file, mode='r') as file:
+        description_file = csv.reader(file)
+        next(description_file)
+        for line in description_file:
+            name_to_disease_map[line[0].strip()].description = line[1].strip()
 
-with open('symptom_Description.csv', mode='r') as file:
-  description_file = csv.reader(file)
-  next(description_file)
-  for line in description_file:
-      name_to_disease_map[line[0].strip()].description = line[1].strip()
+    with open('symptom_precaution.csv', mode='r') as file:
+        precaution_file = csv.reader(file)
+        next(precaution_file)
+        for line in precaution_file:
+            for i in range(1, len(line)):
+                name_to_disease_map[line[0].strip()].advice.append(line[i].strip())
+    symptoms_list = [item for item in severity_map]
+    diagnosis_graph = Graph()
 
-with open('symptom_precaution.csv', mode='r') as file:
-  precaution_file = csv.reader(file)
-  next(precaution_file)
-  for line in precaution_file:
-    for i in range(1, len(line)):
-        name_to_disease_map[line[0].strip()].advice.append(line[i].strip())
+    for disease in name_to_disease_map:
+        if disease not in diagnosis_graph.get_list_of_vertices():
+            diagnosis_graph.add_vertex(disease, 'disease')
 
+        for symptom in name_to_disease_map[disease].symptoms:
+            if symptom not in diagnosis_graph.get_list_of_vertices():
+                diagnosis_graph.add_vertex(symptom, 'symptom')
 
-
-symptoms_list = [item for item in severity_map]
-
-diagnosis_graph = Graph()
-
-for disease in name_to_disease_map:
-    if disease not in diagnosis_graph.get_list_of_vertices():
-        diagnosis_graph.add_vertex(disease, 'disease')
-
-    for symptom in name_to_disease_map[disease].symptoms:
-        if symptom not in diagnosis_graph.get_list_of_vertices():
-            diagnosis_graph.add_vertex(symptom, 'symptom')
-
-        diagnosis_graph.add_edge(disease, symptom, int(severity_map[symptom]))
+            diagnosis_graph.add_edge(disease, symptom, int(severity_map[symptom]))
+    
+    return diagnosis_graph, symptoms_list, name_to_disease_map
 
 
 def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list) -> dict[str, float]:
@@ -251,3 +249,5 @@ def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list) -> dict[
     scores = {disease: (scores[disease] / sum_scores) * 100 for disease in scores}
 
     return scores
+
+diagnosis_graph, symptoms_list, name_to_disease_map = load_diagnosis_graph('Symptom-severity.csv', 'dataset.csv', 'symptom_Description.csv', 'symptom_precaution.csv')
