@@ -69,7 +69,7 @@ def create_diagnosis_window(data: dict):
 
     create_disease_chart(data, pop_up)
 
-    frame_below = cttk.Frame(pop_up)
+    frame_below = ttk.Frame(pop_up)
     frame_below.grid(row=1, column=0, sticky="nsew", padx=15, pady=15)
 
     button_frame_pop = ttk.Frame(frame_below)

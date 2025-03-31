@@ -231,7 +231,7 @@ def load_diagnosis_graph(symptom_file: str, dataset_file: str,
     with open(symptom_file, mode='r') as file:
         reader = csv.reader(file)
         next(reader)
-        severity_map = {row[0].strip(): row[1].strip() for row in reader}
+        severity_map = {element[0].strip(): element[1].strip() for element in reader}
 
     name_to_disease_map = {}
     with open(dataset_file, mode='r') as file:
@@ -292,9 +292,7 @@ def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list) -> dict[
     else:
         for symptom_1, symptom_2 in generate_combinations(symptoms):
             path = diagnosis_graph.shortest_path(symptom_1, symptom_2)
-            for vertex in path:
-                if diagnosis_graph.get_vertex_kind(vertex) == "disease":
-                    scores[vertex] = scores.get(vertex, 0) + diagnosis_graph.calculate_path_score(path)
+            scores.update(calculate_score_path(path))
 
     scores = {disease: 1 / score for disease, score in scores.items() if score != 0}
     sum_scores = sum(scores.values())
@@ -302,8 +300,21 @@ def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list) -> dict[
 
     return scores
 
-# diagnosis_graph, symptoms_list, name_to_disease_map = load_diagnosis_graph('Symptom-severity.csv', 'dataset.csv',
-# 'symptom_Description.csv', 'symptom_precaution.csv')
+
+def calculate_score_path(path: list) -> dict[str:float]:
+    """ Helper function for calculate_potential_disease, calculates the score of a given path"""
+    scores = {}
+    for vertex in path:
+        if diagnosis_graph.get_vertex_kind(vertex) == "disease":
+            scores[vertex] = scores.get(vertex, 0) + diagnosis_graph.calculate_path_score(path)
+    return scores
+
+
+diagnosis_graph, symptoms_list, name_to_disease_map = load_diagnosis_graph(
+    'Symptom-severity.csv',
+    'dataset.csv',
+    'symptom_Description.csv',
+    'symptom_precaution.csv')
 
 
 if __name__ == '__main__':
@@ -312,6 +323,6 @@ if __name__ == '__main__':
     python_ta.check_all(config={
         'extra-imports': ['csv', 'matplotlib', 'tkinter', 'backend', 'matplotlib.pyplot', 'matplotlib.figure',
                           'matplotlib.backends.backend_tkagg'],
-        'allowed-io': ['print'],
+        'allowed-io': ['print', 'load_diagnosis_graph'],
         'max-line-length': 120
     })
