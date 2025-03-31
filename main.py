@@ -171,20 +171,6 @@ class Graph:
         """ Returns a list of all vertices (could be disease or symptom) present in this graph
         """
         return [vertex for vertex in self._vertices]
-    
-    def get_closest_neighbour(self, item: Any) -> Any:
-        """
-        Find and return the closest neighbor of a given vertex with item based on the minimum edge weight.
-        This function iterates through all the neighbors of the specified vertex and identifies 
-        the neighbor with the lowest weight (severity score), representing the closest connection.
-        """
-        min_weight_so_far = 5
-        closest_neighbour_so_far = "placeholder"
-        for neighbour in self._vertices[item].neighbours:
-            if neighbour[1] < min_weight_so_far:
-                min_weight_so_far = neighbour[1]
-                closest_neighbour_so_far = neighbour[0].item
-        return closest_neighbour_so_far
 
 
 with open('Symptom-severity.csv', mode='r') as file:
@@ -265,13 +251,3 @@ def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list) -> dict[
     scores = {disease: (scores[disease] / sum_scores) * 100 for disease in scores}
 
     return scores
-
-
-
-# Some Tests TODO: Delete
-print(calculate_potential_disease(diagnosis_graph, ["congestion", "knee_pain", "depression", "polyuria"]))
-print(calculate_potential_disease(diagnosis_graph, ["continuous_feel_of_urine", "abdominal_pain"]))
-print(calculate_potential_disease(diagnosis_graph, ["continuous_feel_of_urine"]))
-print(calculate_potential_disease(diagnosis_graph, ["abdominal_pain"]))
-print(name_to_disease_map["Peptic ulcer diseae"].advice)
-print(name_to_disease_map["Peptic ulcer diseae"].description)
