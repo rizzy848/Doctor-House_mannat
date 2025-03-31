@@ -1,4 +1,3 @@
-"""This module is the graphical user interface for Doctor House, a remote diognosis software"""
 import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -7,7 +6,11 @@ import backend
 
 
 class DoctorHouseApp:
-    """Represent the main window of app"""
+    """Represent the main window of app
+     Instance Attributes:
+        - root: represent the main window
+        - widgets: A dictionay with elements as each ui element of the root window"""
+
     root: tk.Tk
     widgets: dict
 
@@ -127,7 +130,11 @@ class DoctorHouseApp:
 
 
 class DiagnosisWindow:
-    """Representing the window that would show up after clicking the checking button in main window"""
+    """Representing the window that would show up after clicking the checking button in main window
+         Instance Attributes:
+        - pop_up: represent the main window of this top level window
+        - elements: A dictionay with elements as each ui element of the pop_up window"""
+
     pop_up: tk.Toplevel
     elements: dict
 
