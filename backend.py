@@ -226,7 +226,7 @@ def generate_combinations(lst: list[Any]) -> list[tuple[Any, Any]]:
 
 
 def load_diagnosis_graph(symptom_file: str, dataset_file: str,
-                          description_file: str, precaution_file: str) -> tuple[Graph, list, dict]:
+                         description_file: str, precaution_file: str) -> tuple[Graph, list, dict]:
     """Load the diagnosis graph and related data."""
     with open(symptom_file, mode='r') as file:
         reader = csv.reader(file)
