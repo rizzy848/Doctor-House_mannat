@@ -1,3 +1,4 @@
+"""This module is the graphical user interface for Doctor House, a remote diognosis software"""
 import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
