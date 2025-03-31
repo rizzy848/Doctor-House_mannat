@@ -1,13 +1,10 @@
 # Doctor House Project: Pyhton libraries required
 
 # Testing and code checking
-pyhton-ta
+python-ta~=2.9.1
 
 # Data visualization
 matplotlib
 
 # GUI interface
 tk
-
-# Graph-based computations
-networkx
