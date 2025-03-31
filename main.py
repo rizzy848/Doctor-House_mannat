@@ -1,3 +1,4 @@
+"""This module provides the graphical user interface for our remote diagnosis software"""
 import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
