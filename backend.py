@@ -22,7 +22,7 @@ class Disease:
         """Initialize a new vertex with the given item and neighbours."""
         self.name = name
         self.symptoms = symptoms
-        self.advice = advice if advice is not None else [] 
+        self.advice = advice if advice is not None else []
         self.description = description
 
 
@@ -166,7 +166,7 @@ class Graph:
         for i in range(len(path) - 1):
             score += self.get_weight_of_edge(path[i], path[i + 1])
         return score
-    
+
     def get_list_of_vertices(self) -> list:
         """ Returns a list of all vertices (could be disease or symptom) present in this graph
         """
@@ -214,7 +214,7 @@ def load_diagnosis_graph(symptom_file: str, dataset_file: str, description_file:
                 diagnosis_graph.add_vertex(symptom, 'symptom')
 
             diagnosis_graph.add_edge(disease, symptom, int(severity_map[symptom]))
-    
+
     return diagnosis_graph, symptoms_list, name_to_disease_map
 
 
@@ -252,3 +252,13 @@ def calculate_potential_disease(diagnosis_graph: Graph, symptoms: list) -> dict[
     return scores
 
 diagnosis_graph, symptoms_list, name_to_disease_map = load_diagnosis_graph('Symptom-severity.csv', 'dataset.csv', 'symptom_Description.csv', 'symptom_precaution.csv')
+
+
+if __name__ == '__main__':
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['csv', 'matplotlib', 'tkinter'],
+        'allowed-io': ['print'],
+        'max-line-length': 120
+    })
