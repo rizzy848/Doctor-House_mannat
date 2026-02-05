@@ -4,5 +4,14 @@
 python-ta~=2.9.1
 
 # Data visualization
-matplotlib
+matplotlib>=3.7.0
 
+# Modern UI
+customtkinter>=5.2.0
+Pillow>=10.0.0
+
+# PDF Export
+reportlab>=4.0.0
+
+# Network visualization
+networkx>=3.1
